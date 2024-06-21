@@ -1,10 +1,6 @@
-import React, { useEffect } from "react";
-import { Colors } from "@/constants/Colors";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import React from "react";
+import { View } from "react-native";
+import AnimatedLetter from "../AnimatedLetter";
 
 type Props = {
   line: {
@@ -15,31 +11,27 @@ type Props = {
 };
 
 const LyricsLine = ({ line, isActiveLine }: Props) => {
-  const opacity = useSharedValue(0.1);
-
-  useEffect(() => {
-    opacity.value = withTiming(isActiveLine ? 1 : 0.1, { duration: 500 });
-  }, [isActiveLine]);
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: opacity.value,
-    };
-  });
+  const splitText = line.text.trim().split(" ");
   return (
-    <Animated.Text
+    <View
       style={[
         {
-          fontWeight: 800,
+          flexDirection: "row",
+          flexWrap: "wrap",
           marginBottom: 35,
-          fontSize: 28,
-          color: Colors.textPrimaryColor,
         },
-        animatedStyle,
       ]}
     >
-      {line.text}
-    </Animated.Text>
+      {splitText.map((letter, index) => (
+        <AnimatedLetter
+          key={`${letter}-${index}`}
+          letter={letter}
+          appendSpace={index < splitText.length}
+          isActiveLine={isActiveLine}
+          index={index}
+        />
+      ))}
+    </View>
   );
 };
 
