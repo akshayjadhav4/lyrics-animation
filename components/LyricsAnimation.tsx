@@ -51,7 +51,7 @@ const LyricsAnimation = () => {
             <LyricsLine line={item} isActiveLine={index === currentLine} />
           )}
           keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{ paddingLeft: 20 }}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
           showsVerticalScrollIndicator={false}
           scrollEnabled={false}
           ListFooterComponent={<FlatListSpacer />}
