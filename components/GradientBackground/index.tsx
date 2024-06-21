@@ -20,14 +20,14 @@ const GradientBackground = () => {
 
   useEffect(() => {
     primaryColor.value = withRepeat(
-      withTiming(COLORS_LIST[Math.random() < 0.5 ? 0 : 2], {
+      withTiming(COLORS_LIST[2], {
         duration: 4000,
       }),
       -1,
       true
     );
     secondaryColor.value = withRepeat(
-      withTiming(COLORS_LIST[Math.random() < 0.5 ? 2 : 1], {
+      withTiming(COLORS_LIST[0], {
         duration: 4000,
       }),
       -1,
