@@ -1,6 +1,10 @@
-import { Text } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Colors } from "@/constants/Colors";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 type Props = {
   line: {
@@ -11,21 +15,31 @@ type Props = {
 };
 
 const LyricsLine = ({ line, isActiveLine }: Props) => {
+  const opacity = useSharedValue(0.1);
+
+  useEffect(() => {
+    opacity.value = withTiming(isActiveLine ? 1 : 0.1, { duration: 500 });
+  }, [isActiveLine]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
+  });
   return (
-    <Text
+    <Animated.Text
       style={[
         {
-          color: isActiveLine
-            ? Colors.textPrimaryColor
-            : Colors.textSecondaryColor,
           fontWeight: 800,
-          marginVertical: 10,
-          fontSize: 25,
+          marginBottom: 35,
+          fontSize: 28,
+          color: Colors.textPrimaryColor,
         },
+        animatedStyle,
       ]}
     >
       {line.text}
-    </Text>
+    </Animated.Text>
   );
 };
 
