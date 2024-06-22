@@ -59,6 +59,7 @@ const LyricsAnimation = () => {
           contentContainerStyle={{ paddingHorizontal: 20 }}
           showsVerticalScrollIndicator={false}
           scrollEnabled={false}
+          ListHeaderComponent={<View style={{ height: 100 }}></View>}
           ListFooterComponent={<FlatListSpacer />}
         />
       </SafeAreaView>
