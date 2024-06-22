@@ -11,6 +11,7 @@ const LyricsAnimation = () => {
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const flatlistRef = useRef<FlatList>(null);
+  const timeoutDurationRef = useRef<number | null>(null);
 
   useEffect(() => {
     const playLyrics = () => {
@@ -19,7 +20,7 @@ const LyricsAnimation = () => {
         const nextLyric = Lyrics[currentLine + 1];
         const duration =
           (parseTime(nextLyric.time) - parseTime(currentLyric.time)) * 1000; // Convert seconds to milliseconds
-
+        timeoutDurationRef.current = duration;
         // Move to the next line after the duration
         intervalRef.current = setTimeout(() => {
           setCurrentLine((prevLine) => prevLine + 1);
@@ -48,7 +49,11 @@ const LyricsAnimation = () => {
           ref={flatlistRef}
           data={Lyrics}
           renderItem={({ item, index }) => (
-            <LyricsLine line={item} isActiveLine={index === currentLine} />
+            <LyricsLine
+              line={item.text}
+              isActiveLine={index === currentLine}
+              duration={timeoutDurationRef.current || 4000}
+            />
           )}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{ paddingHorizontal: 20 }}

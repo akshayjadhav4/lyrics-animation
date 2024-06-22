@@ -1,36 +1,40 @@
 import React from "react";
-import { View } from "react-native";
-import AnimatedLetter from "../AnimatedLetter";
+import { Text, View } from "react-native";
+import AnimatedLine from "../AnimatedLine";
+import { Colors } from "@/constants/Colors";
 
 type Props = {
-  line: {
-    text: string;
-    time: string;
-  };
+  line: string;
   isActiveLine: boolean;
+  duration: number;
 };
 
-const LyricsLine = ({ line, isActiveLine }: Props) => {
-  const splitText = line.text.trim().split(" ");
+const LyricsLine = ({ line, isActiveLine, duration }: Props) => {
   return (
     <View
       style={[
         {
-          flexDirection: "row",
-          flexWrap: "wrap",
           marginBottom: 35,
         },
       ]}
     >
-      {splitText.map((letter, index) => (
-        <AnimatedLetter
-          key={`${letter}-${index}`}
-          letter={letter}
-          appendSpace={index < splitText.length}
-          isActiveLine={isActiveLine}
-          index={index}
-        />
-      ))}
+      {isActiveLine ? (
+        <AnimatedLine line={line} duration={duration} />
+      ) : (
+        // Show plain text for non active lines
+        <Text
+          style={[
+            {
+              fontWeight: 800,
+              fontSize: 28,
+              opacity: 0.1,
+              color: Colors.textPrimaryColor,
+            },
+          ]}
+        >
+          {line}
+        </Text>
+      )}
     </View>
   );
 };
