@@ -1,7 +1,13 @@
 import LyricsAnimation from "@/components/LyricsAnimation";
-import { Text, View } from "react-native";
+import { lrcString } from "@/constants/lrcString";
+import { LineType, parseEnhanced } from "clrc";
+import { View } from "react-native";
 
 export default function Index() {
+  const parsedLrc = parseEnhanced(lrcString);
+  const lyrics = parsedLrc.filter(
+    (lrc) => lrc.type === LineType.ENHANCED_LYRIC
+  );
   return (
     <View
       style={{
@@ -10,7 +16,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <LyricsAnimation />
+      <LyricsAnimation parsedLrc={lyrics} />
     </View>
   );
 }

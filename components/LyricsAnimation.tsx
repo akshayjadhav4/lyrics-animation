@@ -1,26 +1,22 @@
 import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import GradientBackground from "./GradientBackground";
-import { Lyrics } from "@/constants/Lyrics";
 import LyricsLine from "@/components/LyricsLine";
 import FlatListSpacer from "@/components/FlatListSpacer";
-import { parseTime } from "@/utils";
+import { EnhancedLrc } from "@/types";
 
-const LyricsAnimation = () => {
+const LyricsAnimation = ({ parsedLrc }: { parsedLrc: EnhancedLrc[] }) => {
   const [currentLine, setCurrentLine] = useState<number>(0);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const flatlistRef = useRef<FlatList>(null);
-  const timeoutDurationRef = useRef<number | null>(null);
 
   useEffect(() => {
     const playLyrics = () => {
-      if (currentLine < Lyrics.length - 1) {
-        const currentLyric = Lyrics[currentLine];
-        const nextLyric = Lyrics[currentLine + 1];
-        const duration =
-          (parseTime(nextLyric.time) - parseTime(currentLyric.time)) * 1000; // Convert seconds to milliseconds
-        timeoutDurationRef.current = duration;
+      if (currentLine < parsedLrc.length - 1) {
+        const currentLyric = parsedLrc[currentLine].startMillisecond || 0;
+        const nextLyric = parsedLrc[currentLine + 1].startMillisecond || 0;
+        const duration = nextLyric - currentLyric;
         // Move to the next line after the duration
         intervalRef.current = setTimeout(() => {
           setCurrentLine((prevLine) => prevLine + 1);
@@ -47,12 +43,12 @@ const LyricsAnimation = () => {
       <SafeAreaView>
         <FlatList
           ref={flatlistRef}
-          data={Lyrics}
+          data={parsedLrc}
           renderItem={({ item, index }) => (
             <LyricsLine
-              line={item.text}
+              line={item}
               isActiveLine={index === currentLine}
-              duration={timeoutDurationRef.current || 4000}
+              nextLineStartInMS={parsedLrc[index + 1]?.startMillisecond}
             />
           )}
           keyExtractor={(item, index) => index.toString()}

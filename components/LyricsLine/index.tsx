@@ -1,42 +1,69 @@
-import React from "react";
-import { Text, View } from "react-native";
-import AnimatedLine from "../AnimatedLine";
-import { Colors } from "@/constants/Colors";
+import React, { useEffect } from "react";
+import { LyricsLineProps } from "@/types";
+import AnimatedWord from "../AnimatedWord";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
-type Props = {
-  line: string;
-  isActiveLine: boolean;
-  duration: number;
-};
+const LyricsLine = ({
+  line,
+  isActiveLine,
+  nextLineStartInMS,
+}: LyricsLineProps) => {
+  const viewOpacity = useSharedValue(0.1);
+  const words = line?.words;
+  const viewStyle = useAnimatedStyle(() => {
+    return { opacity: viewOpacity.value };
+  });
+  useEffect(() => {
+    viewOpacity.value = withTiming(isActiveLine ? 1 : 0.1, {
+      duration: 100,
+      easing: Easing.inOut(Easing.quad),
+    });
+  }, [isActiveLine]);
 
-const LyricsLine = ({ line, isActiveLine, duration }: Props) => {
-  return (
-    <View
+  return words ? (
+    <Animated.View
       style={[
         {
           marginBottom: 35,
+          flexDirection: "row",
+          flexWrap: "wrap",
         },
+        viewStyle,
       ]}
     >
-      {isActiveLine ? (
-        <AnimatedLine line={line} duration={duration} />
-      ) : (
-        // Show plain text for non active lines
-        <Text
-          style={[
-            {
-              fontWeight: 800,
-              fontSize: 28,
-              opacity: 0.1,
-              color: Colors.textPrimaryColor,
-            },
-          ]}
-        >
-          {line}
-        </Text>
-      )}
-    </View>
-  );
+      {words.map((word, wordIndex) => {
+        /**
+         * duration =
+         * nextWord startMillisecond - currentWord startMillisecond
+         *
+         * if currentWord is last word in line
+         * then duration = nextLine startMillisecond - currentWord startMillisecond
+         *
+         * if currentWord is last word in last line
+         * then default duration = 500
+         */
+        const duration =
+          wordIndex < words.length - 1
+            ? words[wordIndex + 1].startMillisecond - word.startMillisecond
+            : nextLineStartInMS
+            ? nextLineStartInMS - word.startMillisecond
+            : 500;
+
+        return (
+          <AnimatedWord
+            key={`${word}-${wordIndex}`}
+            word={word}
+            duration={duration}
+          />
+        );
+      })}
+    </Animated.View>
+  ) : null;
 };
 
 export default LyricsLine;
