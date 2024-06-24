@@ -6,6 +6,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withDelay,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 
@@ -24,8 +25,12 @@ const AnimatedLetter = ({
   delay: number;
 }) => {
   const opacity = useSharedValue(0.5);
+  const translateY = useSharedValue(0);
   const animatedLetterStyle = useAnimatedStyle(() => {
-    return { opacity: opacity.value };
+    return {
+      opacity: opacity.value,
+      transform: [{ translateY: translateY.value }],
+    };
   });
 
   useEffect(() => {
@@ -34,6 +39,12 @@ const AnimatedLetter = ({
       withTiming(1, {
         duration: delayPerLetter,
         easing: Easing.out(Easing.exp),
+      })
+    );
+    translateY.value = withDelay(
+      delay,
+      withSpring(-1, {
+        duration: delayPerLetter,
       })
     );
   }, [letter]);
