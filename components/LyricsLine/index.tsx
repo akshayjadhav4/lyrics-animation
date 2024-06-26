@@ -7,6 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import MusicLine from "../MusicLine";
 
 const LyricsLine = ({
   line,
@@ -25,6 +26,17 @@ const LyricsLine = ({
     });
   }, [isActiveLine]);
 
+  if (line.content === " ") {
+    const currentLineDuration = line.startMillisecond || 0;
+    const nextLineDuration = nextLineStartInMS || 2000;
+
+    return (
+      <MusicLine
+        isActiveLine={isActiveLine}
+        duration={nextLineDuration - currentLineDuration}
+      />
+    );
+  }
   return words ? (
     <Animated.View
       style={[
