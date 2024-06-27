@@ -41,3 +41,6 @@ e.g.
 npm run android   # For Android
 npm run ios       # For iOS
 ```
+
+## Demo
+https://github.com/akshayjadhav4/lyrics-animation/assets/34000732/3ba45ae0-cace-43bf-86cb-85edcbce7f77
