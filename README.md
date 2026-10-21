@@ -78,6 +78,8 @@ npx expo-doctor@latest
 npm run export          # iOS/Android bundles and static web output in dist/
 ```
 
+If Expo CLI builds and installs the iOS app but fails while bringing the simulator window forward, open the installed app with `agent-device open com.anonymous.applemusiclyrics --platform ios --foreground`.
+
 For native UI verification, use the [agent-device skill](https://github.com/callstack/agent-device/blob/main/skills/agent-device/SKILL.md). Build and check one platform at a time, and run `agent-device close --shutdown` before switching platforms to avoid keeping multiple simulators active.
 
 The demo is driven by lyric timestamps and timers; it does not play audio. The upgrade preserves its design and animation timing, fixes scrolling to the active line, uses current shared-value APIs with animation cleanup, and updates safe areas and window sizing.
@@ -101,4 +103,4 @@ See the [Expo SDK 58 release notes](https://expo.dev/changelog/sdk-58), [SDK com
 
 Verified a clean `npm ci`, the three regression tests, TypeScript, lint, Expo dependency alignment, Expo Doctor (20/20), and exports for iOS, Android and static web. The served web export completes the sample without browser warnings or errors.
 
-Release apps were built and verified with agent-device on an iPhone 17 Pro simulator (iOS 26.5) and a Pixel 9 Pro XL emulator (arm64). Both render the Skia background and complete automatic lyric progression. Native checks ran one platform at a time, and each simulator/emulator was shut down afterward. Android release verification used one Gradle worker and the emulator's arm64 ABI. Debug builds, physical hardware, and other Android ABIs were not separately verified.
+Release apps were built and visually verified with agent-device on an iPhone 17 Pro simulator (iOS 26.5) and a Pixel 9 Pro XL emulator (arm64). Both render the Skia background and complete automatic lyric progression. Native checks ran one platform at a time, and each simulator/emulator was shut down afterward. Android release verification used one Gradle worker and the emulator's arm64 ABI. Debug builds, physical hardware, and other Android ABIs were not separately verified.
