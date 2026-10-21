@@ -4,30 +4,35 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
-    "test": "jest --watchAll",
-    "lint": "expo lint"
+    "test": "jest --runInBand",
+    "lint": "expo lint",
+    "test:watch": "jest --watchAll",
+    "typecheck": "tsc --noEmit",
+    "postinstall": "setup-skia-web",
+    "export": "expo export --platform all"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1"
+    }
   },
   "dependencies": {
-    "@expo/vector-icons": "^15.0.2",
+    "@expo/metro-runtime": "~58.0.14",
     "@shopify/react-native-skia": "2.14.0",
     "clrc": "^3.1.4",
     "expo": "~58.0.16",
     "expo-asset": "~58.0.17",
     "expo-constants": "~58.0.12",
-    "expo-font": "~58.0.9",
+    "expo-dev-client": "~58.0.14",
     "expo-linking": "~58.0.13",
     "expo-router": "~58.0.24",
     "expo-splash-screen": "~58.0.10",
     "expo-status-bar": "~58.0.3",
     "expo-system-ui": "~58.0.6",
-    "expo-web-browser": "~58.0.6",
-    "query-string": "^7.1.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-native": "0.88.0",
@@ -39,12 +44,18 @@
     "react-native-worklets": "0.13.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@types/jest": "30.0.0",
+    "@testing-library/react-native": "^14.1.0",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.3.0",
-    "jest": "~30.5.2",
+    "eslint": "^9.39.0",
+    "eslint-config-expo": "~58.0.4",
+    "jest": "^30.5.2",
     "jest-expo": "~58.0.11",
+    "test-renderer": "^1.3.1",
     "typescript": "~6.0.3"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": "^22.13.0 || ^24.3.0 || ^26.0.0 || >=27.0.0"
+  }
 }

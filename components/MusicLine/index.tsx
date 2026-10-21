@@ -19,14 +19,16 @@ const MusicLine = ({
   const c = 12;
   useEffect(() => {
     if (isActiveLine) {
-      r.value = withRepeat(withTiming(12, { duration: 1000 }), -1, true);
-      opacity.value = withTiming(1, { duration: duration });
+      r.set(withRepeat(withTiming(12, { duration: 1000 }), -1, true));
+      opacity.set(withTiming(1, { duration: duration }));
+    } else {
+      opacity.set(withTiming(0.1, { duration: 100 }));
     }
     return () => {
       cancelAnimation(r);
-      opacity.value = withTiming(0.1, { duration: 100 });
+      cancelAnimation(opacity);
     };
-  }, [isActiveLine]);
+  }, [duration, isActiveLine, opacity, r]);
   return (
     <Canvas style={{ flex: 1, height: 63 }}>
       <Circle cx={12} cy={c} r={r} color="white" opacity={opacity} />
