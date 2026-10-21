@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { AnimatedLetterProps, AnimatedWordProps } from "@/types";
 import Animated, {
   Easing,
+  cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -15,26 +16,34 @@ const AnimatedLetter = ({ letter, duration, delay }: AnimatedLetterProps) => {
   const translateY = useSharedValue(0);
   const animatedLetterStyle = useAnimatedStyle(() => {
     return {
-      opacity: opacity.value,
-      transform: [{ translateY: translateY.value }],
+      opacity: opacity.get(),
+      transform: [{ translateY: translateY.get() }],
     };
   });
   useEffect(() => {
-    opacity.value = withDelay(
-      delay,
-      withTiming(1, {
-        duration: duration,
-        easing: Easing.out(Easing.exp),
-      })
+    opacity.set(
+      withDelay(
+        delay,
+        withTiming(1, {
+          duration: duration,
+          easing: Easing.out(Easing.exp),
+        }),
+      ),
     );
-    translateY.value = withDelay(
-      delay,
-      withTiming(-2, {
-        duration: duration,
-        easing: Easing.linear,
-      })
+    translateY.set(
+      withDelay(
+        delay,
+        withTiming(-2, {
+          duration: duration,
+          easing: Easing.linear,
+        }),
+      ),
     );
-  }, []);
+    return () => {
+      cancelAnimation(opacity);
+      cancelAnimation(translateY);
+    };
+  }, [delay, duration, opacity, translateY]);
   return (
     <Animated.Text
       style={[

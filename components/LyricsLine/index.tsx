@@ -3,6 +3,7 @@ import { LyricsLineProps } from "@/types";
 import AnimatedWord from "../AnimatedWord";
 import Animated, {
   Easing,
+  cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -17,14 +18,17 @@ const LyricsLine = ({
   const viewOpacity = useSharedValue(0.1);
   const words = line?.words;
   const viewStyle = useAnimatedStyle(() => {
-    return { opacity: viewOpacity.value };
+    return { opacity: viewOpacity.get() };
   });
   useEffect(() => {
-    viewOpacity.value = withTiming(isActiveLine ? 1 : 0.1, {
-      duration: 100,
-      easing: Easing.inOut(Easing.quad),
-    });
-  }, [isActiveLine]);
+    viewOpacity.set(
+      withTiming(isActiveLine ? 1 : 0.1, {
+        duration: 100,
+        easing: Easing.inOut(Easing.quad),
+      }),
+    );
+    return () => cancelAnimation(viewOpacity);
+  }, [isActiveLine, viewOpacity]);
 
   if (line.content === " ") {
     const currentLineDuration = line.startMillisecond || 0;
@@ -63,8 +67,8 @@ const LyricsLine = ({
           wordIndex < words.length - 1
             ? words[wordIndex + 1].startMillisecond - word.startMillisecond
             : nextLineStartInMS
-            ? nextLineStartInMS - word.startMillisecond
-            : 500;
+              ? nextLineStartInMS - word.startMillisecond
+              : 500;
 
         return (
           <AnimatedWord

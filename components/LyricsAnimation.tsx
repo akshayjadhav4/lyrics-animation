@@ -1,4 +1,5 @@
-import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect, useRef, useState } from "react";
 import GradientBackground from "./GradientBackground";
 import LyricsLine from "@/components/LyricsLine";
@@ -8,8 +9,8 @@ import { EnhancedLrc } from "@/types";
 const LyricsAnimation = ({ parsedLrc }: { parsedLrc: EnhancedLrc[] }) => {
   const [currentLine, setCurrentLine] = useState<number>(0);
 
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const flatlistRef = useRef<FlatList>(null);
+  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const flatlistRef = useRef<FlatList<EnhancedLrc>>(null);
 
   useEffect(() => {
     const playLyrics = () => {
@@ -21,7 +22,7 @@ const LyricsAnimation = ({ parsedLrc }: { parsedLrc: EnhancedLrc[] }) => {
         intervalRef.current = setTimeout(() => {
           setCurrentLine((prevLine) => prevLine + 1);
           flatlistRef.current?.scrollToIndex({
-            index: currentLine,
+            index: currentLine + 1,
             animated: true,
           });
         }, duration);
@@ -36,11 +37,12 @@ const LyricsAnimation = ({ parsedLrc }: { parsedLrc: EnhancedLrc[] }) => {
         clearTimeout(intervalRef.current);
       }
     };
-  }, [currentLine]);
+  }, [currentLine, parsedLrc]);
 
   return (
     <View style={styles.container}>
-      <SafeAreaView>
+      <GradientBackground />
+      <SafeAreaView style={{ flex: 1 }}>
         <FlatList
           ref={flatlistRef}
           data={parsedLrc}
@@ -59,7 +61,6 @@ const LyricsAnimation = ({ parsedLrc }: { parsedLrc: EnhancedLrc[] }) => {
           ListFooterComponent={<FlatListSpacer />}
         />
       </SafeAreaView>
-      <GradientBackground />
     </View>
   );
 };

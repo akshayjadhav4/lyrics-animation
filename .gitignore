@@ -18,3 +18,7 @@ web-build/
 
 expo-env.d.ts
 # @end expo-cli
+# Generated native projects (Expo prebuild) and CanvasKit
+/ios/
+/android/
+/public/canvaskit.wasm

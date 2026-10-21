@@ -1,9 +1,8 @@
-import { View } from "react-native";
-import React from "react";
-import { Dimension } from "@/constants/Dimensions";
+import { View, useWindowDimensions } from "react-native";
 
 const FlatListSpacer = () => {
-  return <View style={{ height: Dimension.height }} />;
+  const { height } = useWindowDimensions();
+  return <View style={{ height }} />;
 };
 
 export default FlatListSpacer;
