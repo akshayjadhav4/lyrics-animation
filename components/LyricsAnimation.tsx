@@ -8,7 +8,7 @@ import { EnhancedLrc } from "@/types";
 const LyricsAnimation = ({ parsedLrc }: { parsedLrc: EnhancedLrc[] }) => {
   const [currentLine, setCurrentLine] = useState<number>(0);
 
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const flatlistRef = useRef<FlatList>(null);
 
   useEffect(() => {
